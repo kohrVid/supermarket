@@ -1,15 +1,12 @@
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
-version: 2
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2
+
 jobs:
   build:
-    working_directory: ~/kohrVid-website
-
+    working_directory: ~/supermarket
     docker:
-      # specify the version you desire here
-      - image: circleci/ruby:2.6.1-node
+      - image: circleci/ruby:2.6.5-stretch-node
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
@@ -21,19 +18,15 @@ jobs:
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: supermarket_test
-
+    executor: ruby/default
     steps:
       - checkout
       - run:
           command: mkdir -p /tmp/test-results
-
       - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update
-            gem update --system
-            gem install bundler
-            bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+          name: Install bundler
+          command: gem install bundler
+      - ruby/bundle-install
 
       - run:
           name: Database Setup

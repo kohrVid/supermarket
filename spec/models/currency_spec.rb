@@ -1,3 +1,4 @@
+require 'spec_helper'
 require_relative "../../lib/models/currency.rb"
 
 RSpec.describe Currency, type: :model do
