@@ -1,4 +1,4 @@
-require "active_record/base"
+require 'active_record'
 
 class Currency < ActiveRecord::Base
   validates :code, length: { is: 3 }
