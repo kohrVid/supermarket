@@ -28,6 +28,10 @@ Run database migrations:
 
     rake db:migrate
 
+Run migrations in the test environment:
+
+    rake db:migrate RAILS_ENV=test
+
 Drop the test and development databases:
 
     rake db:drop
