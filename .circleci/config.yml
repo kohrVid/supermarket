@@ -35,12 +35,6 @@ jobs:
             gem install bundler
             bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-            - public/packs-test
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
-
       - run:
           name: Database Setup
           command: |
