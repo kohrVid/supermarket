@@ -4,8 +4,8 @@ require_relative "../../lib/models/currency.rb"
 RSpec.describe Currency, type: :model do
   context "#code" do
     it "should be unique" do
-      FactoryBot.create(:currency)
-      expect(FactoryBot.build(:currency)).to_not be_valid
+      FactoryBot.create(:currency, :gbp)
+      expect(FactoryBot.build(:currency, :gbp)).to_not be_valid
     end
 
     it "should comply with ISO 4217" do

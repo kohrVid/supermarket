@@ -1,5 +1,11 @@
 FactoryBot.define do
   factory :currency do
-    code { "GBP" }
+    trait :gbp do
+      code { "GBP" }
+    end
+
+    trait :eur do
+      code { "EUR" }
+    end
   end
 end

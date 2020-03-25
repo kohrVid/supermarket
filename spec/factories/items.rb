@@ -6,7 +6,7 @@ FactoryBot.define do
       name { "A" }
       price { 5000 }
       currency_id do
-        Currency.find_or_create_by(attributes_for(:currency)).id
+        Currency.find_or_create_by(attributes_for(:currency, :gbp)).id
       end
     end
 
@@ -14,14 +14,14 @@ FactoryBot.define do
       name { "B" }
       price { 3000 }
       currency_id do
-        Currency.find_or_create_by(attributes_for(:currency)).id
+        Currency.find_or_create_by(attributes_for(:currency, :gbp)).id
       end
     end
 
     trait :c do
       name { "C" }
       price { 2000 }
-      currency_id { create(:currency, code: "EUR").id }
+      currency_id { create(:currency, :eur).id }
     end
   end
 end
