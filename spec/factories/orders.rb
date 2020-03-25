@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :order do
     subtotal { 0 }
     total { 0 }
-    currency { create(:currency) }
+    currency_id do
+      Currency.find_or_create_by(attributes_for(:currency)).id
+    end
   end
 end

@@ -6,6 +6,7 @@ RSpec.describe Order, type: :model do
   let(:order) { FactoryBot.create(:order) }
   let(:item_a) { FactoryBot.create(:item, :a) }
   let(:item_b) { FactoryBot.create(:item, :b) }
+  let(:item_c) { FactoryBot.create(:item, :c) }
 
   it "should have a currency" do
     expect(FactoryBot.build(:order, currency_id: nil)).to_not be_valid
@@ -13,6 +14,13 @@ RSpec.describe Order, type: :model do
 
   it "can have many items" do
     expect(order).to respond_to(:items)
+  end
+
+  context "before_add items callback" do
+    it "should not add items with the wrong currency" do
+      expect { order.items << item_c }.
+        to raise_error{ ActiveRecord::RecordNotSaved }
+    end
   end
 
   context "after_add items callback" do
