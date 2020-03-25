@@ -16,9 +16,10 @@ RSpec.describe Order, type: :model do
   end
 
   context "#subtotal" do
-    it "should return the total cost of all items with corrections" do
+    it "should return the cost of all items with corrections as an instance of Money" do
       order.items << [item_a, item_b]
-      expect(order.subtotal).to eq 80
+      expect(order.subtotal).to eq Money.new(8000, "GBP")
+      expect(order.subtotal.format).to eq "£80.00"
     end
   end
 end

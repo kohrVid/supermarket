@@ -1,4 +1,5 @@
 require 'active_record'
+require 'money'
 
 class Order < ActiveRecord::Base
   belongs_to :currency
@@ -7,6 +8,9 @@ class Order < ActiveRecord::Base
   validates :currency_id, presence: true
 
   def subtotal
-    items.map(&:price).reduce(:+)
+    Money.new(
+      items.map(&:price).reduce(:+),
+      currency.code
+    )
   end
 end
