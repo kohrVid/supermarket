@@ -1,6 +1,7 @@
 require_relative '../../lib/models/checkout.rb'
 
 RSpec.describe Checkout, type: :model do
+  let(:checkout) { Checkout.new }
   let(:item_a) { FactoryBot.create(:item, :a) }
   let(:item_b) { FactoryBot.create(:item, :b) }
 
@@ -19,11 +20,16 @@ RSpec.describe Checkout, type: :model do
   end
 
   context "#scan" do
-    let(:checkout) { Checkout.new }
-
     it "should add an item to an order" do
       checkout.scan(item_a)
       expect(checkout.order.items).to include(item_a)
+    end
+  end
+
+  context "#total" do
+    it "should correctly format the total of a given order" do
+      checkout.scan(item_a)
+      expect(checkout.total).to eq "£50.00"
     end
   end
 end
