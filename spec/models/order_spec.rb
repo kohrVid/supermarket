@@ -15,30 +15,51 @@ RSpec.describe Order, type: :model do
     expect(order).to respond_to(:items)
   end
 
-  context "#update_subtotal!" do
-    it "should return the subtotal of an order's items" do
-      order.items << [item_a, item_b]
-      order.update_subtotal!
-
-      expect(order.subtotal).to eq 8000
+  context "after_add items callback" do
+    it "should update an order's subtotal when a single item is added" do
+      expect { order.items << item_a }.
+        to change{ order.subtotal }.from(0).to(5000)
     end
 
-    it "should update when items are removed" do
-      order.items << [item_a, item_b]
-      order.update_subtotal!
-      order.items.delete(item_b)
-      order.update_subtotal!
-
-      expect(order.subtotal).to eq 5000
+    it "should update an order's subtotal when multiple items are added" do
+      expect { order.items << [item_a, item_b] }.
+        to change{ order.subtotal }.from(0).to(8000)
     end
 
-    context "#update_total!" do
-      it "should return the subtotal if there are no deals" do
-        order.items << [item_a, item_b]
-        order.update_total!
+    it "should update an order's total when a single item is added" do
+      expect { order.items << item_a }.
+        to change{ order.total }.from(0).to(5000)
+    end
 
-        expect(order.total).to eq 8000
-      end
+    it "should update an order's total when multiple items are added" do
+      expect { order.items << [item_a, item_b] }.
+        to change{ order.total }.from(0).to(8000)
+    end
+  end
+
+  context "after_destroy items callback" do
+    before do
+      order.items << [item_a, item_b]
+    end
+
+    it "should update an order's subtotal when a single item is removed" do
+      expect { order.items.delete(item_a) }.
+        to change { order.subtotal }.from(8000).to(3000)
+    end
+
+    it "should update an order's subtotal when a multiple items are removed" do
+      expect { order.items.delete([item_a, item_b]) }.
+        to change { order.subtotal }.from(8000).to(0)
+    end
+
+    it "should update an order's total when a single item is removed" do
+      expect { order.items.delete(item_a) }.
+        to change { order.total }.from(8000).to(3000)
+    end
+
+    it "should update an order's total when a multiple items are removed" do
+      expect { order.items.delete([item_a, item_b]) }.
+        to change { order.total }.from(8000).to(0)
     end
   end
 end

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative "../../lib/models/item_order.rb"
+require_relative '../../lib/models/item_order.rb'
 
 RSpec.describe ItemOrder, type: :model do
   it "should have an item" do
