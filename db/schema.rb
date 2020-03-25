@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_24_225726) do
+ActiveRecord::Schema.define(version: 2020_03_25_085732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,5 +30,15 @@ ActiveRecord::Schema.define(version: 2020_03_24_225726) do
     t.index ["currency_id"], name: "index_items_on_currency_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.integer "subtotal"
+    t.integer "total"
+    t.bigint "currency_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency_id"], name: "index_orders_on_currency_id"
+  end
+
   add_foreign_key "items", "currencies"
+  add_foreign_key "orders", "currencies"
 end
