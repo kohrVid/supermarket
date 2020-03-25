@@ -2,6 +2,7 @@ require 'simplecov'
 require 'active_record'
 require 'active_record/base'
 require 'database_cleaner/active_record'
+require 'factory_bot'
 SimpleCov.start
 
 RSpec.configure do |config|
@@ -9,7 +10,10 @@ RSpec.configure do |config|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
+  config.include FactoryBot::Syntax::Methods
+
   config.before(:suite) do
+    FactoryBot.find_definitions
     db = YAML.load(File.read("#{Dir.pwd}/db/config.yml"))["test"]
 
     ActiveRecord::Base.establish_connection(db)
