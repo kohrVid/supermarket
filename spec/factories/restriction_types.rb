@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :restriction do
+  factory :restriction_type do
     trait :mov do
       type { "Minimum Order Value" }
     end

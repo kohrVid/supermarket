@@ -1,5 +1,5 @@
 require 'active_record'
 
-class Restriction < ActiveRecord::Base
+class RestrictionType < ActiveRecord::Base
   validates :type, uniqueness: true
 end
