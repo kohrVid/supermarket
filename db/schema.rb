@@ -48,6 +48,11 @@ ActiveRecord::Schema.define(version: 2020_03_26_162009) do
     t.index ["currency_id"], name: "index_orders_on_currency_id"
   end
 
+  create_table "restriction_groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "restriction_type_minimum_item_quantities", force: :cascade do |t|
     t.bigint "item_id"
     t.integer "quantity"
