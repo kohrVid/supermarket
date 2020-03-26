@@ -6,4 +6,8 @@ class RestrictionType::MinimumItemQuantity < ActiveRecord::Base
   validates :item_id, presence: true
   validates :quantity, numericality: { greater_than: 0 },
     uniqueness: { scope: :item_id }
+
+  def check(order)
+    order.items.select{ |i| item == i }.length >= quantity
+  end
 end

@@ -1,10 +1,15 @@
 require 'spec_helper'
+require_relative '../../../lib/models/item_order.rb'
 require_relative '../../../lib/models/restriction_type/minimum_item_quantity.rb'
 
 RSpec.describe RestrictionType::MinimumItemQuantity, type: :model do
   let(:minimum_item_quantity) do
     FactoryBot.create(:minimum_item_quantity, :two_of_a)
   end
+
+  let(:order) { FactoryBot.create(:order) }
+  let(:item_a) { FactoryBot.create(:item, :a) }
+  let(:item_b) { FactoryBot.create(:item, :b) }
 
   it "should be unique" do
     minimum_item_quantity
@@ -15,6 +20,20 @@ RSpec.describe RestrictionType::MinimumItemQuantity, type: :model do
         :two_of_a,
       )
     ).to_not be_valid
+  end
+
+  context "#check" do
+    it "should return a true if an order matches the restriction" do
+      order.items << [item_a, item_a]
+
+      expect(minimum_item_quantity.check(order)).to eq true
+    end
+
+    it "should return a false if an order doesn't match the restriction" do
+      order.items << [item_a, item_b]
+
+      expect(minimum_item_quantity.check(order)).to eq false
+    end
   end
 
   context "#item" do
