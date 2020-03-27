@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_27_103558) do
+ActiveRecord::Schema.define(version: 2020_03_27_123915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,14 @@ ActiveRecord::Schema.define(version: 2020_03_27_103558) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.bigint "reward_type_id"
+    t.integer "reward_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reward_type_id"], name: "index_rewards_on_reward_type_id"
+  end
+
   add_foreign_key "item_orders", "items"
   add_foreign_key "item_orders", "orders"
   add_foreign_key "items", "currencies"
@@ -108,4 +116,5 @@ ActiveRecord::Schema.define(version: 2020_03_27_103558) do
   add_foreign_key "restriction_type_minimum_item_quantities", "items"
   add_foreign_key "restrictions", "restriction_groups"
   add_foreign_key "restrictions", "restriction_types"
+  add_foreign_key "rewards", "reward_types"
 end
