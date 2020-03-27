@@ -27,14 +27,31 @@ RSpec.describe Restriction, group: :model do
   end
 
   context "associations" do
-    let(:restriction) { FactoryBot.create(:restriction, :miq) }
+    let(:miq_restriction) { FactoryBot.create(:restriction, :miq) }
+    let(:mov_restriction) { FactoryBot.create(:restriction, :mov) }
 
     it "should belong to a restriction group" do
-      expect(restriction).to respond_to(:group)
+      expect(miq_restriction).to respond_to(:group)
+      expect(miq_restriction.group).to be_an_instance_of(RestrictionGroup)
     end
 
     it "should belong to a restriction type" do
-      expect(restriction).to respond_to(:type)
+      expect(miq_restriction).to respond_to(:type)
+      expect(miq_restriction.type).to be_an_instance_of(RestrictionType)
+    end
+
+    context "#body" do
+      it "should return the correct row if the restriction is a minimum item quantity type" do
+        expect(
+          miq_restriction.body
+        ).to eq(RestrictionType::MinimumItemQuantity.last)
+      end
+
+      it "should return the correct row if the restriction is a minimum order value type" do
+        expect(
+          mov_restriction.body
+        ).to eq(RestrictionType::MinimumOrderValue.last)
+      end
     end
   end
 end

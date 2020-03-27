@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :restriction_type_minimum_order_value,
     aliases: [:minimum_order_value],
     class: RestrictionType::MinimumOrderValue do
-    value { 20000 }
+      value { 20000 }
   end
 end
