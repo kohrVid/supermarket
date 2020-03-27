@@ -6,6 +6,9 @@ class RestrictionType::MinimumOrderValue < ActiveRecord::Base
     numericality: { greater_than: 0 }, uniqueness: true
 
   def check(order)
-    order.subtotal >= value
+    restriction_met = (order.subtotal >= value)
+    number_of_matches = (order.subtotal / value)
+
+    [restriction_met, number_of_matches]
   end
 end

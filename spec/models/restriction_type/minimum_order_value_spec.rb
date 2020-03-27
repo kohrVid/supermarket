@@ -40,13 +40,19 @@ RSpec.describe RestrictionType::MinimumOrderValue, type: :model do
     it "should return a true if an order matches the restriction" do
       order.items << [item, item, item, item]
 
-      expect(minimum_order_value.check(order)).to eq true
+      expect(minimum_order_value.check(order)).to eq [true, 1]
+    end
+
+    it "should return the number of times an order matches the restriction" do
+      order.items << [item, item, item, item, item, item, item, item]
+
+      expect(minimum_order_value.check(order)).to eq [true, 2]
     end
 
     it "should return a false if an order doesn't match the restriction" do
       order.items << [item, item]
 
-      expect(minimum_order_value.check(order)).to eq false
+      expect(minimum_order_value.check(order)).to eq [false, 0]
     end
   end
 end
