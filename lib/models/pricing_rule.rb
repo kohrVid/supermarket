@@ -8,6 +8,10 @@ class PricingRule < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
+  def check_restrictions(order)
+    restrictions.map { |restriction| restriction.check(order) }.exclude?(false)
+  end
+
   def restrictions
     Array(restriction_group).flat_map do |group|
       group.restrictions.map(&:body)
