@@ -32,6 +32,14 @@ Run migrations in the test environment:
 
     rake db:migrate RAILS_ENV=test
 
+Seed the development database:
+
+    rake db:seed
+
+Clear all rows in the development database:
+
+    rake db:seed deseed=true
+
 Drop the test and development databases:
 
     rake db:drop
