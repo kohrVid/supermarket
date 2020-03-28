@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :reward_type_value_off,
     aliases: [:value_off],
     class: RewardType::ValueOff do
-      value { 500 }
+      value { 1000 }
   end
 end

@@ -32,7 +32,7 @@ RSpec.describe RewardType::ValueOff, type: :model do
       order.items << [item_a, item_b]
       value_off.apply(order)
 
-      expect(order.total).to eq(7500)
+      expect(order.total).to eq(7000)
     end
 
     it "should not reduce an order's subtotal" do

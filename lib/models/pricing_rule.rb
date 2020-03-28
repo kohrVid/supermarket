@@ -8,8 +8,16 @@ class PricingRule < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def check_restrictions(order)
-    restrictions.map { |restriction| restriction.check(order) }.exclude?(false)
+  def apply_reward(order)
+    check_all_restrictions = restrictions.map do |restriction|
+      restriction.check(order)
+    end
+
+    if check_all_restrictions.map(&:first).exclude?(false)
+      check_all_restrictions.map(&:second).reduce(:+).times do
+        reward.body.apply(order)
+      end
+    end
   end
 
   def restrictions
