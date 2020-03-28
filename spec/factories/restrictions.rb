@@ -20,6 +20,21 @@ FactoryBot.define do
       end
     end
 
+    trait :miq2 do
+      restriction_type_id do
+        RestrictionType.find_or_create_by(
+          attributes_for(:restriction_type, :miq)
+        ).id
+      end
+
+      restriction_id do
+        RestrictionType::MinimumItemQuantity.find_or_create_by(
+
+          attributes_for(:minimum_item_quantity, :three_of_b)
+        ).id
+      end
+    end
+
     trait :mov do
       restriction_type_id do
         RestrictionType.find_or_create_by(

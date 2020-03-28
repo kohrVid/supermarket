@@ -10,5 +10,12 @@ FactoryBot.define do
         end
         quantity { 2 }
       end
+
+      trait :three_of_b do
+        item_id do
+          Item.find_or_create_by(attributes_for(:item, :b)).id
+        end
+        quantity { 3 }
+      end
   end
 end
