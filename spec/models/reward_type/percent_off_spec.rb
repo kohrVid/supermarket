@@ -39,6 +39,14 @@ RSpec.describe RewardType::PercentOff, type: :model do
       expect(order.total).to eq(7200)
     end
 
+    it "should not reduce the same order total if called more than once" do
+      order.items << [item_a, item_b]
+      percent_off.apply(order)
+      percent_off.apply(order)
+
+      expect(order.total).to eq(7200)
+    end
+
     it "should not reduce an order's subtotal" do
       order.items << [item_a, item_b]
       percent_off.apply(order)

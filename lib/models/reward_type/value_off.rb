@@ -5,7 +5,7 @@ class RewardType::ValueOff < ActiveRecord::Base
   validates :value, presence: true, uniqueness: true
 
   def apply(order)
-    reduced_total = order.total - value
+    reduced_total = order.subtotal - value
     order.update(total: reduced_total)
   end
 end

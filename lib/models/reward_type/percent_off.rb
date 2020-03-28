@@ -6,7 +6,7 @@ class RewardType::PercentOff < ActiveRecord::Base
     uniqueness: true, numericality: { less_than: 100 }
 
   def apply(order)
-    reduced_total = order.total * (1 - (percentage / 100))
+    reduced_total = order.subtotal * (1 - (percentage / 100))
     order.update(total: reduced_total)
   end
 end

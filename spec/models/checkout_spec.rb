@@ -136,5 +136,11 @@ RSpec.describe Checkout, type: :model do
       expect(checkout.total).to eq "£189.00"
       expect(checkout.order.subtotal).to eq 22000
     end
+
+    it "should only update the total of a given order once" do
+      checkout.scan(item_a)
+      checkout.total
+      expect(checkout.total).to eq "£50.00"
+    end
   end
 end
