@@ -4,6 +4,8 @@ require_relative './reward.rb'
 class PricingRule < ActiveRecord::Base
   has_one :restriction_group
   has_one :reward
+  has_many :pricing_rule_orders
+  has_many :orders, through: :pricing_rule_orders
   has_many :restrictions, through: :restriction_group
 
   validates :name, presence: true, uniqueness: true

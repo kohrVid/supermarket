@@ -41,6 +41,11 @@ RSpec.describe PricingRule, group: :model do
       expect(pricing_rule.reward).to be_an_instance_of(Reward)
     end
 
+    it "should be possible to add many order to a pricing rule" do
+      expect(pricing_rule).to respond_to(:pricing_rule_orders)
+      expect(pricing_rule).to respond_to(:orders)
+    end
+
     it "should have a restriction group" do
       expect(pricing_rule).to respond_to(:restriction_group)
 

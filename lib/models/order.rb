@@ -1,4 +1,5 @@
 require 'active_record'
+require_relative './pricing_rule.rb'
 
 class Order < ActiveRecord::Base
   belongs_to :currency
@@ -8,6 +9,12 @@ class Order < ActiveRecord::Base
     after_add: :update_total!,
     after_remove: :update_total!,
     through: :item_orders
+  has_many :pricing_rule_orders
+  has_many :applied_discounts,
+    class_name: "PricingRule",
+    through: :pricing_rule_orders,
+    source: :pricing_rule
+
   validates :currency_id, presence: true
 
   private
