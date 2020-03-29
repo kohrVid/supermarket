@@ -54,5 +54,10 @@ RSpec.describe RestrictionType::MinimumOrderValue, type: :model do
 
       expect(minimum_order_value.check(order)).to eq [false, 0]
     end
+
+    it "should return a false if an order's subtotal is nil" do
+      order.total = nil
+      expect(minimum_order_value.check(order)).to eq [false, 0]
+    end
   end
 end

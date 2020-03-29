@@ -9,7 +9,7 @@ class RestrictionType::MinimumItemQuantity < ActiveRecord::Base
     uniqueness: { scope: :item_id }
 
   def check(order)
-    list_item_quantity = order.items.select{ |i| item == i }.length
+    list_item_quantity = order.items.select { |i| item == i }.length
     restriction_met = (list_item_quantity >=  quantity)
     number_of_matches = (list_item_quantity / quantity)
 

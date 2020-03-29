@@ -40,6 +40,13 @@ RSpec.describe RestrictionType::MinimumItemQuantity, type: :model do
 
       expect(minimum_item_quantity.check(order)).to eq [false, 0]
     end
+
+    it "should return a false if an order has no items" do
+      order.subtotal = nil
+      order.items = []
+
+      expect(minimum_item_quantity.check(order)).to eq [false, 0]
+    end
   end
 
   context "#item" do
