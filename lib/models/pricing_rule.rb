@@ -27,6 +27,13 @@ class PricingRule < ActiveRecord::Base
       amount += reward.body.calculate_deduction(
         order.total, number_of_deductions
       )
+
+      # Note, this is probably not as efficient as `self.discounted_orders ||= [order]`
+      # but this seems easier to follow and it's unclear that optimisation is
+      # necessary at this stage.
+      discounted_orders << order unless discounted_orders.include?(order)
+    else
+      discounted_orders.delete(order)
     end
 
     amount

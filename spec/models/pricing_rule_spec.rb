@@ -122,7 +122,41 @@ RSpec.describe PricingRule, group: :model do
         # restriction is met twice and the MOV restriction is met once. Ordinarily,
         # these restrictions would be placed on different pricing rules but this is
         # a useful edge case.
-        expect(pricing_rule.order_discount(order)).to eq 3000
+        expect(pricing_rule.discount_to_apply(order)).to eq 3000
+      end
+
+      context "pricing_rule_orders" do
+        it "should create a row in the pricing_rule_orders table for each rule" do
+          order.items << [item_a, item_a]
+
+          expect {
+            pricing_rule.discount_to_apply(order)
+          }.to change { PricingRuleOrder.count }.from(0).to(1)
+
+          expect(order.applied_discounts).to include(pricing_rule)
+        end
+
+        it "should remove rows in the pricing_rule_orders table if they no longer match" do
+          order.items << [item_a, item_a]
+          pricing_rule.discount_to_apply(order)
+
+          # The following is required because deleting duplicate items from an
+          # order is quite difficult and simply removing the ItemOrder record
+          # didn't work.
+          order.items = [order.items.slice(1)]
+          pricing_rule.discount_to_apply(order)
+
+          expect(order.applied_discounts).to_not include(pricing_rule)
+        end
+
+        it "shouldn't create duplicate rows in the pricing_rule_orders table" do
+          order.items << [item_a, item_a]
+          pricing_rule.discount_to_apply(order)
+
+          expect {
+            pricing_rule.discount_to_apply(order)
+          }.to_not raise_error { ActiveRecord::RecordInvalid }
+        end
       end
     end
   end
