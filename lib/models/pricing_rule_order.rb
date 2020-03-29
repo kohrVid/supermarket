@@ -4,5 +4,6 @@ class PricingRuleOrder < ActiveRecord::Base
   belongs_to :pricing_rule
   belongs_to :order
 
-  validates_presence_of :pricing_rule_id, :order_id
+  validates :pricing_rule_id, presence: true, uniqueness: { scope: :order_id }
+  validates :order_id, presence: true
 end
