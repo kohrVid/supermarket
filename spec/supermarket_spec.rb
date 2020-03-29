@@ -69,6 +69,44 @@ RSpec.describe Supermarket, type: :model do
     end
   end
 
+  context "#remove" do
+    it "should raise an exception if there are no pricing rules in the database" do
+      expect { supermarket.remove(1) }.to raise_error(RuntimeError)
+    end
+
+    context "populated database" do
+      let(:order) { Order.first }
+
+      before do
+        item_a
+        item_b
+        pricing_rule
+        supermarket.init
+        supermarket.scan(item_a.id)
+        supermarket.scan(item_a.id)
+        supermarket.scan(item_b.id)
+      end
+
+      it "should remove an item from an order" do
+        expect {
+          supermarket.remove(item_a.id)
+        }.to change{ order.items.count }.from(3).to(2)
+      end
+
+      it "should not remove items that don't exist" do
+        expect {
+          supermarket.remove(9999)
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "should output removed items to stdout" do
+        expect {
+          supermarket.remove(item_a.id)
+        }.to output(/Item #{item_a.name} removed from order ##{order.id}/).to_stdout
+      end
+    end
+  end
+
   context "#total" do
     it "should raise an exception if there are no pricing rules in the database" do
       expect { supermarket.total }.to raise_error(RuntimeError)

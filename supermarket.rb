@@ -28,7 +28,7 @@ class Supermarket < Thor
     puts Item.all.map{|item| {id: item.id, name: item.name, price: item.price} }
   end
 
-  desc "scan", "Scan an item in the supermarket"
+  desc "scan", "Scan an item on the checkout"
   def scan(item_id)
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
@@ -37,6 +37,20 @@ class Supermarket < Thor
     checkout.scan(item)
 
     puts "Item #{item.name} added to order ##{checkout.order.id}"
+      .colorize(:green)
+
+    update_tmp_data(checkout, pricing_rules)
+  end
+
+  desc "remove", "Remove an item from an order"
+  def remove(item_id)
+    check_pricing_rules_exist
+    (order, pricing_rules, checkout) = database_variables
+
+    item = Item.find(item_id)
+    checkout.remove(item)
+
+    puts "Item #{item.name} removed from order ##{checkout.order.id}"
       .colorize(:green)
 
     update_tmp_data(checkout, pricing_rules)
