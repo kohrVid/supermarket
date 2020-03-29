@@ -22,6 +22,13 @@ class Checkout
     end
   end
 
+  def subtotal
+    Money.new(
+      @order.subtotal,
+      @currency.code
+    ).format
+  end
+
   def total
     if !@order.pricing_rules_applied
       pricing_rules.each do |rule|
