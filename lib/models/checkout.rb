@@ -15,6 +15,11 @@ class Checkout
     @order = order || Order.create(currency: currency)
   end
 
+  # The following has been added to resolve deprecation warnings
+  Money.rounding_mode = BigDecimal::ROUND_HALF_UP
+  Money.locale_backend = :i18n
+  I18n.locale = :en
+
   def scan(item)
     @order.items << item
     if @order.pricing_rules_applied
