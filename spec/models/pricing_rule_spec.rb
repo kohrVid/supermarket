@@ -143,7 +143,9 @@ RSpec.describe PricingRule, group: :model do
           # The following is required because deleting duplicate items from an
           # order is quite difficult and simply removing the ItemOrder record
           # didn't work.
-          order.items = [order.items.slice(1)]
+          items = order.items.to_a
+          items.delete_at(1)
+          order.items = items
           pricing_rule.discount_to_apply(order)
 
           expect(order.applied_discounts).to_not include(pricing_rule)

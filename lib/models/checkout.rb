@@ -22,6 +22,17 @@ class Checkout
     end
   end
 
+  def remove(item)
+    items = @order.items.each_with_index.select{ |i, idx| i == item }
+    arr = @order.items.to_a
+    arr.delete_at(items.last[1])
+    @order.items = arr
+
+    if @order.pricing_rules_applied
+      @order.update(pricing_rules_applied: false)
+    end
+  end
+
   def subtotal
     Money.new(
       @order.subtotal,

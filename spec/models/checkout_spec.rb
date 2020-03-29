@@ -111,6 +111,29 @@ RSpec.describe Checkout, type: :model do
     end
   end
 
+  context "#remove" do
+    it "should remove an item from an order" do
+      checkout.scan(item_a)
+      checkout.scan(item_a)
+      checkout.scan(item_b)
+
+      expect {
+        checkout.remove(item_a)
+      }.to change { checkout.order.items.length }.from(3).to(2)
+    end
+
+    it "should remove the correct item from an order" do
+      checkout.scan(item_a)
+      checkout.scan(item_a)
+      checkout.scan(item_b)
+      checkout.remove(item_a)
+
+      expect(checkout.order.items).to include(item_a)
+      expect(checkout.order.items).to include(item_b)
+      expect(checkout.order.items.count).to eq 2
+    end
+  end
+
   context "#total" do
     it "should correctly format the total of a given order" do
       checkout.scan(item_a)
