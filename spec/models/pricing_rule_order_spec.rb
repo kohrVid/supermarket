@@ -15,4 +15,16 @@ RSpec.describe PricingRuleOrder, type: :model do
 
     expect(FactoryBot.build(:pricing_rule_order)).to_not be_valid
   end
+
+  context "associations" do
+    let(:pricing_rule_order) { FactoryBot.create(:pricing_rule_order) }
+
+    it "should have an order" do
+      expect(pricing_rule_order).to respond_to(:order)
+    end
+
+    it "should have a pricing rule" do
+      expect(pricing_rule_order).to respond_to(:pricing_rule)
+    end
+  end
 end
