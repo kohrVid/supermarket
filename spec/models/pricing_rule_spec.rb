@@ -43,7 +43,7 @@ RSpec.describe PricingRule, group: :model do
 
     it "should be possible to add many order to a pricing rule" do
       expect(pricing_rule).to respond_to(:pricing_rule_orders)
-      expect(pricing_rule).to respond_to(:orders)
+      expect(pricing_rule).to respond_to(:discounted_orders)
     end
 
     it "should have a restriction group" do
@@ -79,7 +79,7 @@ RSpec.describe PricingRule, group: :model do
     end
   end
 
-  context "#order_discount" do
+  context "#discount_to_apply" do
     let(:pricing_rule_2) do
       PricingRule.find_or_create_by(attributes_for(:pricing_rule, :basket))
     end
@@ -87,7 +87,7 @@ RSpec.describe PricingRule, group: :model do
     it "should return 0 if the rule is configured without a reward" do
       restriction_group.restrictions << miq_restriction
 
-      expect(pricing_rule_2.order_discount(order)).to eq 0
+      expect(pricing_rule_2.discount_to_apply(order)).to eq 0
     end
 
     context "with reward" do
@@ -99,19 +99,19 @@ RSpec.describe PricingRule, group: :model do
       it "should return the deduction amount if the only restriction is met" do
         order.items << [item_a, item_a]
 
-        expect(pricing_rule.order_discount(order)).to eq 1000
+        expect(pricing_rule.discount_to_apply(order)).to eq 1000
       end
 
       it "should return 0 if the no restrictions are met" do
         order.items << item_a
 
-        expect(pricing_rule.order_discount(order)).to eq 0
+        expect(pricing_rule.discount_to_apply(order)).to eq 0
       end
 
       it "should return the correct deduction amount if restrictions are met twice" do
         order.items << [item_a, item_a, item_a, item_a]
 
-        expect(pricing_rule.order_discount(order)).to eq 2000
+        expect(pricing_rule.discount_to_apply(order)).to eq 2000
       end
 
       it "should return the correct reward if all restrictions are met" do

@@ -32,9 +32,10 @@ class Checkout
   def total
     if !@order.pricing_rules_applied
       pricing_rules.each do |rule|
-        new_total = @order.total.to_i - rule.order_discount(@order)
+        new_total = @order.total.to_i - rule.discount_to_apply(@order)
         @order.update(total: new_total)
       end
+
       @order.update(pricing_rules_applied: true)
     end
 

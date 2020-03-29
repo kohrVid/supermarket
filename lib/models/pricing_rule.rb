@@ -1,16 +1,20 @@
 require 'active_record'
+require_relative './pricing_rule_order.rb'
 require_relative './reward.rb'
 
 class PricingRule < ActiveRecord::Base
   has_one :restriction_group
   has_one :reward
   has_many :pricing_rule_orders
-  has_many :orders, through: :pricing_rule_orders
+  has_many :discounted_orders,
+    class_name: "Order",
+    through: :pricing_rule_orders,
+    source: :order
   has_many :restrictions, through: :restriction_group
 
   validates :name, presence: true, uniqueness: true
 
-  def order_discount(order)
+  def discount_to_apply(order)
     amount = 0
 
     check_all_restrictions = restrictions.map do |restriction|
