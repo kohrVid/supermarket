@@ -8,16 +8,19 @@ class PricingRule < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def apply_reward(order)
+  def order_deduction(order)
+    amount = 0
+
     check_all_restrictions = restrictions.map do |restriction|
       restriction.check(order)
     end
 
     if check_all_restrictions.map(&:first).exclude?(false)
-      check_all_restrictions.map(&:second).reduce(:+).times do
-        reward.body.apply(order)
-      end
+      number_of_deductions = check_all_restrictions.map(&:second).reduce(:+)
+      amount += reward.body.calculate_deduction(order.total, number_of_deductions)
     end
+
+    amount
   end
 
   def restrictions
