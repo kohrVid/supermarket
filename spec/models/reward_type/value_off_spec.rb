@@ -1,15 +1,10 @@
 require 'spec_helper'
-require_relative "../../../lib/models/item_order.rb"
 require_relative '../../../lib/models/reward_type/value_off.rb'
 
 RSpec.describe RewardType::ValueOff, type: :model do
   let(:value_off) do
     FactoryBot.create(:value_off)
   end
-
-  let(:order) { FactoryBot.create(:order) }
-  let(:item_a) { FactoryBot.create(:item, :a) }
-  let(:item_b) { FactoryBot.create(:item, :b) }
 
   it "should be valid with the correct attributes" do
     expect(FactoryBot.build(:value_off)).to be_valid
@@ -27,27 +22,17 @@ RSpec.describe RewardType::ValueOff, type: :model do
     end
   end
 
-  context "apply" do
-    it "should reduce an order total by the correct amount" do
-      order.items << [item_a, item_b]
-      value_off.apply(order)
-
-      expect(order.total).to eq(7000)
+  context "calculate_deduction" do
+    it "should return the correct calculate_deduction for a given amount" do
+      expect(value_off.calculate_deduction(10000, 1)).to eq(1000)
     end
 
-    it "should not reduce the same order total if called more than once" do
-      order.items << [item_a, item_b]
-      value_off.apply(order)
-      value_off.apply(order)
-
-      expect(order.total).to eq(7000)
+    it "should allow the caller to apply the calculate_deduction multiple times if specified" do
+      expect(value_off.calculate_deduction(10000, 2)).to eq(2000)
     end
 
-    it "should not reduce an order's subtotal" do
-      order.items << [item_a, item_b]
-      value_off.apply(order)
-
-      expect(order.subtotal).to eq(8000)
+    it "should return 0 if the original amount is less than or equal to the calculate_deduction" do
+      expect(value_off.calculate_deduction(1000, 2)).to eq(0)
     end
   end
 end

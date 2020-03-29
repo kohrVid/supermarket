@@ -5,8 +5,7 @@ class RewardType::PercentOff < ActiveRecord::Base
   validates :percentage, presence: true,
     uniqueness: true, numericality: { less_than: 100 }
 
-  def apply(order)
-    reduced_total = order.subtotal * (1 - (percentage / 100))
-    order.update(total: reduced_total)
+  def calculate_deduction(original_amount, number_of_deductions=nil)
+    original_amount * (percentage / 100)
   end
 end

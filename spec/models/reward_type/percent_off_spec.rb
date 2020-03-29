@@ -1,15 +1,10 @@
 require 'spec_helper'
-require_relative "../../../lib/models/item_order.rb"
 require_relative '../../../lib/models/reward_type/percent_off.rb'
 
 RSpec.describe RewardType::PercentOff, type: :model do
   let(:percent_off) do
     FactoryBot.create(:percent_off)
   end
-
-  let(:order) { FactoryBot.create(:order) }
-  let(:item_a) { FactoryBot.create(:item, :a) }
-  let(:item_b) { FactoryBot.create(:item, :b) }
 
   it "should be valid with the correct attributes" do
     expect(FactoryBot.build(:percent_off)).to be_valid
@@ -31,27 +26,9 @@ RSpec.describe RewardType::PercentOff, type: :model do
     end
   end
 
-  context "apply" do
-    it "should reduce an order total by the correct percentage" do
-      order.items << [item_a, item_b]
-      percent_off.apply(order)
-
-      expect(order.total).to eq(7200)
-    end
-
-    it "should not reduce the same order total if called more than once" do
-      order.items << [item_a, item_b]
-      percent_off.apply(order)
-      percent_off.apply(order)
-
-      expect(order.total).to eq(7200)
-    end
-
-    it "should not reduce an order's subtotal" do
-      order.items << [item_a, item_b]
-      percent_off.apply(order)
-
-      expect(order.subtotal).to eq(8000)
+  context "calculate_deduction" do
+    it "should return the correct deduction amount for an amount given" do
+      expect(percent_off.calculate_deduction(10000)).to eq(1000)
     end
   end
 end
