@@ -74,39 +74,51 @@ RSpec.describe PricingRule, group: :model do
     end
   end
 
-  context "#deduction" do
-    before do
-      reward
+  context "#order_deduction" do
+    let(:pricing_rule_2) do
+      PricingRule.find_or_create_by(attributes_for(:pricing_rule, :basket))
+    end
+
+    it "should return 0 if the rule is configured without a reward" do
       restriction_group.restrictions << miq_restriction
+
+      expect(pricing_rule_2.order_deduction(order)).to eq 0
     end
 
-    it "should return the deduction amount if the only restriction is met" do
-      order.items << [item_a, item_a]
+    context "with reward" do
+      before do
+        reward
+        restriction_group.restrictions << miq_restriction
+      end
 
-      expect(pricing_rule.order_deduction(order)).to eq 1000
-    end
+      it "should return the deduction amount if the only restriction is met" do
+        order.items << [item_a, item_a]
 
-    it "should return 0 if the no restrictions are met" do
-      order.items << item_a
+        expect(pricing_rule.order_deduction(order)).to eq 1000
+      end
 
-      expect(pricing_rule.order_deduction(order)).to eq 0
-    end
+      it "should return 0 if the no restrictions are met" do
+        order.items << item_a
 
-    it "should return the correct deduction amount if restrictions are met twice" do
-      order.items << [item_a, item_a, item_a, item_a]
+        expect(pricing_rule.order_deduction(order)).to eq 0
+      end
 
-      expect(pricing_rule.order_deduction(order)).to eq 2000
-    end
+      it "should return the correct deduction amount if restrictions are met twice" do
+        order.items << [item_a, item_a, item_a, item_a]
 
-    it "should return the correct reward if all restrictions are met" do
-      restriction_group.restrictions << mov_restriction
-      order.items << [item_a, item_a, item_a, item_a, item_a]
+        expect(pricing_rule.order_deduction(order)).to eq 2000
+      end
 
-      # Note, this applies the same £10 off reward three times because the MIQ
-      # restriction is met twice and the MOV restriction is met once. Ordinarily,
-      # these restrictions would be placed on different pricing rules but this is
-      # a useful edge case.
-      expect(pricing_rule.order_deduction(order)).to eq 3000
+      it "should return the correct reward if all restrictions are met" do
+        restriction_group.restrictions << mov_restriction
+        order.items << [item_a, item_a, item_a, item_a, item_a]
+
+        # Note, this applies the same £10 off reward three times because the MIQ
+        # restriction is met twice and the MOV restriction is met once. Ordinarily,
+        # these restrictions would be placed on different pricing rules but this is
+        # a useful edge case.
+        expect(pricing_rule.order_deduction(order)).to eq 3000
+      end
     end
   end
 end

@@ -15,9 +15,12 @@ class PricingRule < ActiveRecord::Base
       restriction.check(order)
     end
 
-    if check_all_restrictions.map(&:first).exclude?(false)
+    if check_all_restrictions.map(&:first).exclude?(false) && reward.present?
       number_of_deductions = check_all_restrictions.map(&:second).reduce(:+)
-      amount += reward.body.calculate_deduction(order.total, number_of_deductions)
+
+      amount += reward.body.calculate_deduction(
+        order.total, number_of_deductions
+      )
     end
 
     amount
