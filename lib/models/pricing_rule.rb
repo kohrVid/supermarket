@@ -10,7 +10,7 @@ class PricingRule < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def order_deduction(order)
+  def order_discount(order)
     amount = 0
 
     check_all_restrictions = restrictions.map do |restriction|

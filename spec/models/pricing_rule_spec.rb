@@ -79,7 +79,7 @@ RSpec.describe PricingRule, group: :model do
     end
   end
 
-  context "#order_deduction" do
+  context "#order_discount" do
     let(:pricing_rule_2) do
       PricingRule.find_or_create_by(attributes_for(:pricing_rule, :basket))
     end
@@ -87,7 +87,7 @@ RSpec.describe PricingRule, group: :model do
     it "should return 0 if the rule is configured without a reward" do
       restriction_group.restrictions << miq_restriction
 
-      expect(pricing_rule_2.order_deduction(order)).to eq 0
+      expect(pricing_rule_2.order_discount(order)).to eq 0
     end
 
     context "with reward" do
@@ -99,19 +99,19 @@ RSpec.describe PricingRule, group: :model do
       it "should return the deduction amount if the only restriction is met" do
         order.items << [item_a, item_a]
 
-        expect(pricing_rule.order_deduction(order)).to eq 1000
+        expect(pricing_rule.order_discount(order)).to eq 1000
       end
 
       it "should return 0 if the no restrictions are met" do
         order.items << item_a
 
-        expect(pricing_rule.order_deduction(order)).to eq 0
+        expect(pricing_rule.order_discount(order)).to eq 0
       end
 
       it "should return the correct deduction amount if restrictions are met twice" do
         order.items << [item_a, item_a, item_a, item_a]
 
-        expect(pricing_rule.order_deduction(order)).to eq 2000
+        expect(pricing_rule.order_discount(order)).to eq 2000
       end
 
       it "should return the correct reward if all restrictions are met" do
@@ -122,7 +122,7 @@ RSpec.describe PricingRule, group: :model do
         # restriction is met twice and the MOV restriction is met once. Ordinarily,
         # these restrictions would be placed on different pricing rules but this is
         # a useful edge case.
-        expect(pricing_rule.order_deduction(order)).to eq 3000
+        expect(pricing_rule.order_discount(order)).to eq 3000
       end
     end
   end
