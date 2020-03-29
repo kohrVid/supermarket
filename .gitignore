@@ -1,4 +1,5 @@
-coverage
 .rspec
 *.swp
 *.swo
+coverage
+tmp/cli-data.json
