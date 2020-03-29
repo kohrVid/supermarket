@@ -86,7 +86,12 @@ RSpec.describe Checkout, type: :model do
     end
 
     it "should create an order with the right currency if one is given" do
-      checkout = Checkout.new(pricing_rules,FactoryBot.create(:currency, :eur))
+      checkout = Checkout.new(
+        pricing_rules,
+        nil,
+        FactoryBot.create(:currency, :eur)
+      )
+
       expect(checkout.order).to be_valid
       expect(checkout.order.currency.code).to eq "EUR"
     end
@@ -139,8 +144,25 @@ RSpec.describe Checkout, type: :model do
 
     it "should only update the total of a given order once" do
       checkout.scan(item_a)
+      checkout.scan(item_a)
       checkout.total
-      expect(checkout.total).to eq "£50.00"
+
+      expect(checkout.total).to eq "£90.00"
+    end
+
+    it "should update the total again if the order is modified" do
+      checkout.scan(item_a)
+      checkout.scan(item_a)
+      checkout.total
+      checkout.scan(item_a)
+      checkout.total
+
+      expect(checkout.total).to eq "£140.00"
+    end
+
+    it "should return £0 if there are no items in an order" do
+      checkout.total
+      expect(checkout.total).to eq "£0.00"
     end
   end
 end

@@ -1,15 +1,18 @@
 require 'money'
-require_relative './item_order.rb'
+Dir[File.join(__dir__, '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'restriction_type', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'reward_type', '*.rb')].each { |file| require file }
 
 class Checkout
   attr_accessor :order
   def initialize(
     pricing_rules,
+    order = nil,
     currency = Currency.find_or_create_by(code: "GBP")
   )
     @pricing_rules = pricing_rules
     @currency = currency
-    @order = Order.create(currency: currency)
+    @order = order || Order.create(currency: currency)
   end
 
   def scan(item)
@@ -18,7 +21,8 @@ class Checkout
 
   def total
     pricing_rules.each do |rule|
-      rule.apply_reward(@order)
+      new_total = @order.total.to_i - rule.order_deduction(@order)
+      @order.update(total: new_total)
     end
 
     Money.new(
