@@ -52,8 +52,8 @@ Drop the test and development databases:
 
 ## Running the app
 
-This repo is built with a CLI tool for that can be used to add and remove items
-from an order and calculate the total amount that a customer will have to pay.
+The CLI tool can be used to add and remove items from an order and calculate the
+ total amount that a customer will have to pay.
 
 To initialise the CLI:
 
@@ -94,7 +94,7 @@ but hopefully should give the observer some idea of the database schema.
 
 The first table written was the `currencies` table and both `items` and `orders`
 have a `belongs_to` relationship with it. This app assumes that a supermarket
-will only handle items with a single currency so some changes would be needed to
+will only handle items with a single currency so some changes are needed to
 support transactions in multiple currencies. Currently the app uses GBP by the
 default and though the Checkout model lists currency as an optional parameter, the CLI currently does not allow the user to switch currency.
 
@@ -107,7 +107,7 @@ a single restriction that corresponds to the reward, the app has been written to
 allow of the creation of rules with multiple restrictions placed on it, which is
 grouped into  `restriction_groups`. A pricing rule is only permitted to have one
 reward associated with it. Currently, this means that pricing rules with more
-than one restrictions may apply the same reward multiple times. It is unclear to
+than one restriction may apply the same reward multiple times. It is unclear to
 me whether this is desirable behaviour but as this represents an unusual
 edge-case, I am relunctant alter this functionality.
 
@@ -119,16 +119,16 @@ whether an order is eligible for a discount. Each Reward type must have a
 `calculate_deduction` method which will eventually be aplied to the order total
 displayed to the user. The two concepts are an attempt to model polymorphism at
 the database level and splitting up the `PriningRule` entity in this way allows
-for the creation of more modular pricing rules going forards.
+for the creation of more modular pricing rules going forwards.
 
 
 ### Orders
 
 Scanned items in the app are added to an entity known as the "Order" model.
-Halfway through the project, it did occur to me the "Basket" might have been a
+Halfway through the project, it did occur to me that "Basket" might have been a
 more suitable name ("order" suggests a collection of items that have not yet
 arrrived whereas the app is supposed to model behaviour found in a supermarket
-which would involve a basket that the customer presents at checkout). This was
+which would involve a "basket" that the customer presents at checkout). This was
 left unchanged as I felt that my time would be better spent elsewhere. Were this
 CLI ever refactored, it might make sense to rename the model and related tables.
 
