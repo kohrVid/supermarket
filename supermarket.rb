@@ -4,6 +4,7 @@ require 'colorize'
 require 'rake'
 require 'thor'
 require_relative './lib/models/checkout.rb'
+require_relative './lib/presenters/items_presenter.rb'
 
 class Supermarket < Thor
   db = YAML.load(File.read("#{Dir.pwd}/db/config.yml"))["development"]
@@ -25,7 +26,9 @@ class Supermarket < Thor
   desc "show_products", "List all items available in the supermarket"
   def show_products
     check_pricing_rules_exist
-    puts Item.all.map{|item| {id: item.id, name: item.name, price: item.price} }
+    items = Item.all
+
+    puts ItemsPresenter.new(items).show_all
   end
 
   desc "scan", "Scan an item on the checkout"
@@ -61,8 +64,8 @@ class Supermarket < Thor
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
 
-    total = checkout.total
-    puts "Total payable is #{total}".colorize(:green)
+    #total = OrderPresenter.new(order).total
+    puts "Total payable is #{checkout.total}".colorize(:green)
     update_tmp_data(checkout, pricing_rules)
   end
 
@@ -71,8 +74,7 @@ class Supermarket < Thor
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
 
-    puts "Order ##{checkout.order.id} consists of #{order.items.map(&:name)}"
-      .colorize(:green)
+    puts OrderPresenter.new(order).receipt(checkout.total).colorize(:green)
   end
 
   private
@@ -100,6 +102,8 @@ class Supermarket < Thor
       JSON.parse(File.read(TMP_DATA))["order"]
         .symbolize_keys.slice(:id, :subtotal, :total, :currency_id)
     ).first
+
+    order ||= Order.new(currency_id: Currency.first.id)
 
     pricing_rules = PricingRule.all
     checkout = Checkout.new(pricing_rules, order)

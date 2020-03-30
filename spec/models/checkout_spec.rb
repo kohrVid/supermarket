@@ -188,11 +188,4 @@ RSpec.describe Checkout, type: :model do
       expect(checkout.total).to eq "£0.00"
     end
   end
-
-  context "#subtotal" do
-    it "should correctly format the subtotal of a given order" do
-      checkout.scan(item_a)
-      expect(checkout.subtotal).to eq "£50.00"
-    end
-  end
 end

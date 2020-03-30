@@ -2,23 +2,19 @@ require 'money'
 Dir[File.join(__dir__, '*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'restriction_type', '*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'reward_type', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, '..', 'presenters', '*.rb')].each { |file| require file }
 
 class Checkout
   attr_accessor :order
+
   def initialize(
     pricing_rules,
     order = nil,
     currency = Currency.find_or_create_by(code: "GBP")
   )
     @pricing_rules = pricing_rules
-    @currency = currency
     @order = order || Order.create(currency: currency)
   end
-
-  # The following has been added to resolve deprecation warnings
-  Money.rounding_mode = BigDecimal::ROUND_HALF_UP
-  Money.locale_backend = :i18n
-  I18n.locale = :en
 
   def scan(item)
     @order.items << item
@@ -38,13 +34,6 @@ class Checkout
     end
   end
 
-  def subtotal
-    Money.new(
-      @order.subtotal,
-      @currency.code
-    ).format
-  end
-
   def total
     if !@order.pricing_rules_applied
       pricing_rules.each do |rule|
@@ -55,10 +44,7 @@ class Checkout
       @order.update(pricing_rules_applied: true)
     end
 
-    Money.new(
-      @order.total,
-      @currency.code
-    ).format
+    OrderPresenter.new(@order).total
   end
 
   def pricing_rules

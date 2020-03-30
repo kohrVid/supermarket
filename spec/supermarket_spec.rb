@@ -28,9 +28,12 @@ RSpec.describe Supermarket, type: :model do
       item_b
       pricing_rule
 
-      expect { supermarket.show_products }.to output(
-        "#{{ id: item_a.id, name: item_a.name, price: item_a.price }}\n#{{ id: item_b.id, name: item_b.name, price: item_b.price }}\n"
-      ).to_stdout
+      expect { supermarket.show_products }.to output(/#{item_a.id}/).to_stdout
+      expect { supermarket.show_products }.to output(/#{item_a.name}/).to_stdout
+      expect { supermarket.show_products }.to output(/£50.00/).to_stdout
+      expect { supermarket.show_products }.to output(/#{item_b.id}/).to_stdout
+      expect { supermarket.show_products }.to output(/#{item_b.name}/).to_stdout
+      expect { supermarket.show_products }.to output(/£30.00/).to_stdout
     end
   end
 
@@ -159,7 +162,19 @@ RSpec.describe Supermarket, type: :model do
 
         expect {
           supermarket.receipt
-        }.to output(/Order ##{order.id} consists of \[\"A\", \"B\"\]/).to_stdout
+        }.to output(/Items purchased:/).to_stdout
+
+        expect {
+          supermarket.receipt
+        }.to output(/#A .......... £50.00/).to_stdout
+
+        expect {
+          supermarket.receipt
+        }.to output(/#B .......... £30.00/).to_stdout
+
+        expect {
+          supermarket.receipt
+        }.to output(/Subtotal .... £80.00/).to_stdout
       end
     end
   end
