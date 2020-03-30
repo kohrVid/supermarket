@@ -24,7 +24,7 @@ RSpec.describe ItemsPresenter, type: :presenter do
       |  #{item_a.id} |  A   | £50.00 |
       |  #{item_b.id} |  B   | £30.00 |
 
-    When scanning an item, please use one of the IDs specifed above.
+    When scanning an item, please use one of the IDs specified above.
         EOF
       ) 
     end

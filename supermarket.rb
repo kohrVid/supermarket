@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'active_record'
 require 'active_record/base'
 require 'colorize'
@@ -11,7 +13,7 @@ class Supermarket < Thor
   ActiveRecord::Base.establish_connection(db)
   TMP_DATA = "#{Dir.pwd}/tmp/cli-data.json"
 
-  desc "init", "Initialise the app and with default rows"
+  desc "init", "Initialise the app with default pricing rules and a new order (basket)"
   def init
     check_pricing_rules_exist
     pricing_rules = PricingRule.all
@@ -31,7 +33,7 @@ class Supermarket < Thor
     puts ItemsPresenter.new(items).show_all
   end
 
-  desc "scan", "Scan an item on the checkout"
+  desc "scan", "Scan an item at the checkout and add to current order"
   def scan(item_id)
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
@@ -45,7 +47,7 @@ class Supermarket < Thor
     update_tmp_data(checkout, pricing_rules)
   end
 
-  desc "remove", "Remove an item from an order"
+  desc "remove", "Remove an item from the current order"
   def remove(item_id)
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
@@ -59,22 +61,22 @@ class Supermarket < Thor
     update_tmp_data(checkout, pricing_rules)
   end
 
-  desc "total", "Return the basket total"
+  desc "total", "Return the basket total for the order"
   def total
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
 
-    #total = OrderPresenter.new(order).total
     puts "Total payable is #{checkout.total}".colorize(:green)
     update_tmp_data(checkout, pricing_rules)
   end
 
-  desc "receipt", "Show receipt"
+  desc "receipt", "View receipt for current order"
   def receipt
     check_pricing_rules_exist
     (order, pricing_rules, checkout) = database_variables
 
     puts OrderPresenter.new(order).receipt(checkout.total).colorize(:green)
+    update_tmp_data(checkout, pricing_rules)
   end
 
   private
@@ -101,9 +103,7 @@ class Supermarket < Thor
     order = Order.where(
       JSON.parse(File.read(TMP_DATA))["order"]
         .symbolize_keys.slice(:id, :subtotal, :total, :currency_id)
-    ).first
-
-    order ||= Order.new(currency_id: Currency.first.id)
+    ).first || Order.new(currency_id: Currency.first.id)
 
     pricing_rules = PricingRule.all
     checkout = Checkout.new(pricing_rules, order)

@@ -27,7 +27,7 @@ class ItemsPresenter
 
     footer = <<-EOF
 
-    When scanning an item, please use one of the IDs specifed above.
+    When scanning an item, please use one of the IDs specified above.
     EOF
 
     header + rows + footer
