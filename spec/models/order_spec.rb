@@ -1,6 +1,5 @@
 require 'spec_helper'
 require_relative '../../lib/models/order.rb'
-require_relative '../../lib/models/item_order.rb'
 
 RSpec.describe Order, type: :model do
   let(:order) { FactoryBot.create(:order) }

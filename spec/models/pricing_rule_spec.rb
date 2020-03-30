@@ -1,6 +1,5 @@
 require 'spec_helper'
 require_relative "../../lib/models/pricing_rule.rb"
-require_relative "../../lib/models/item_order.rb"
 
 RSpec.describe PricingRule, group: :model do
   let(:miq_restriction) { FactoryBot.create(:restriction, :miq) }

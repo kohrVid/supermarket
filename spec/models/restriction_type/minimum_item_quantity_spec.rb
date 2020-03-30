@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../../lib/models/item_order.rb'
 require_relative '../../../lib/models/restriction_type/minimum_item_quantity.rb'
 
 RSpec.describe RestrictionType::MinimumItemQuantity, type: :model do

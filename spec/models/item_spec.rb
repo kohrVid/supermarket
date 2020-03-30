@@ -1,6 +1,5 @@
 require 'spec_helper'
 require_relative '../../lib/models/item.rb'
-require_relative '../../lib/models/restriction_type/minimum_item_quantity.rb'
 
 RSpec.describe Item, type: :model do
   let(:item) { FactoryBot.create(:item, :a) }

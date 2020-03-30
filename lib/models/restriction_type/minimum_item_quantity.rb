@@ -1,4 +1,5 @@
 require 'active_record'
+require_relative '../item_order.rb'
 require_relative '../restriction_type.rb'
 
 class RestrictionType::MinimumItemQuantity < ActiveRecord::Base

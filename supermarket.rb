@@ -6,7 +6,6 @@ require 'colorize'
 require 'rake'
 require 'thor'
 require_relative './lib/models/checkout.rb'
-require_relative './lib/presenters/items_presenter.rb'
 
 class Supermarket < Thor
   db = YAML.load(File.read("#{Dir.pwd}/db/config.yml"))["development"]

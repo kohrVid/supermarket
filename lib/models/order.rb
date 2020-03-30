@@ -1,4 +1,5 @@
 require 'active_record'
+require_relative './item_order.rb'
 require_relative './pricing_rule.rb'
 
 class Order < ActiveRecord::Base
